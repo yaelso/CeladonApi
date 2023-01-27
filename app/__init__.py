@@ -22,12 +22,18 @@ def create_app(test_config=None):
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_TEST_DATABASE_URI")
 
-    # Import models here for Alembic setup
+    from app.models.category import Category
+    from app.models.checklist import Checklist
+    from app.models.checklist_status import Checklist_Status
+    from app.models.task import Task
+    from app.models.pokemon import Pokemon
+    from app.models.user import User
 
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # Register Blueprints here
+    from app.routes.category_routes import categories_bp
+    app.register_blueprint(categories_bp)
 
     CORS(app)
     return app
