@@ -24,7 +24,7 @@ def get_all_categories():
 
     return jsonify([category.to_dict() for category in categories])
 
-@categories_bp.route("", methods=["DELETE"])
+@categories_bp.route("/<id>", methods=["DELETE"])
 def delete_category(id):
     category = validate_model(Category, id)
 

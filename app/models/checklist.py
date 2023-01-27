@@ -7,7 +7,7 @@ class Checklist(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     category = db.relationship("Category", back_populates="checklists")
     tasks = db.relationship("Task", back_populates="checklist", lazy=True)
-    status_id = db.Column(db.Integer, db.ForeignKey("checklist_status.id"))
+    # status_id = db.Column(db.Integer, db.ForeignKey("checklist_status.id"))
 
     def to_dict(self, tasks=False):
         checklist = {
