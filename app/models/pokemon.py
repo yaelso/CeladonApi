@@ -5,3 +5,5 @@ class Pokemon(db.Model):
     name = db.Column(db.String)
     level = db.Column(db.Integer)
     exp = db.Column(db.Integer)
+    # img reference?
+    # collected?
