@@ -2,7 +2,7 @@ from werkzeug.exceptions import HTTPException
 from app.models.category import Category
 import pytest
 
-@pytest.mark.skip(reason="No way to test this feature yet")
+
 def test_get_categories_no_saved_categories(client):
     response = client.get("/categories")
     response_body = response.get_json()
@@ -10,7 +10,6 @@ def test_get_categories_no_saved_categories(client):
     assert response.status_code == 200
     assert response_body == []
 
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_all_categories(client, one_category):
     response = client.get("/categories")
     response_body = response.get_json()
@@ -25,9 +24,8 @@ def test_get_all_categories(client, one_category):
         }
     ]
 
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_post_category_must_contain_title(client):
-    response = client.post("/category", json={
+    response = client.post("/categories", json={
         "description": "Test description"
     })
     response_body = response.get_json()
@@ -39,9 +37,8 @@ def test_post_category_must_contain_title(client):
     }
     assert Category.query.all() == []
 
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_post_category_must_contain_description(client):
-    response = client.post("/category", json={
+    response = client.post("/categories", json={
         "title": "Test title"
     })
     response_body = response.get_json()
@@ -53,7 +50,6 @@ def test_post_category_must_contain_description(client):
     }
     assert Category.query.all() == []
 
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_delete_category(client, one_category):
     response = client.delete("/categories/1")
     response_body = response.get_json()
@@ -65,18 +61,16 @@ def test_delete_category(client, one_category):
     }
     assert Category.query.get(1) == None
 
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_delete_category_not_found(client):
     response = client.delete("/categories/1")
     response_body = response.get_json()
 
     assert response.status_code == 404
-    assert response_body == {"details": "Categories 1 ID not found"}
+    assert response_body == {"details": "Category 1 ID not found"}
 
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_delete_category_invalid_id(client):
     response = client.delete("/categories/x")
     response_body = response.get_json()
 
-    assert response.status_code == 404
-    assert response_body == {"details": "Categories x invalid ID"}
+    assert response.status_code == 400
+    assert response_body == {"details": "Category x invalid ID"}
