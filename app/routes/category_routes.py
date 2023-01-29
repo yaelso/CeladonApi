@@ -9,9 +9,9 @@ categories_bp = Blueprint("categories", __name__, url_prefix="/categories")
 def create_category():
     request_body = request.get_json()
     if not "title" in request_body or not "description" in request_body:
-        return make_response({"details":"Invalid submission field"}, 400)
+        return make_response({"details":"Invalid submission field; missing title or description"}, 400)
 
-    new_category= Category.from_dict(request_body)
+    new_category = Category.from_dict(request_body)
 
     db.session.add(new_category)
     db.session.commit()
