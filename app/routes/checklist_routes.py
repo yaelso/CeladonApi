@@ -25,7 +25,7 @@ def create_checklist():
 def get_all_checklists_for_category():
     category = validate_model(Category, request.args.get("category_id"))
 
-    all_checklists = Checklist.query.all()
+    all_checklists = Checklist.query.filter(Checklist.category_id == category.id)
     return jsonify([checklist.to_dict() for checklist in all_checklists])
 
 @checklists_bp.route("/<id>", methods=["PATCH"])

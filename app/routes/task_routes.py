@@ -25,8 +25,7 @@ def create_task():
 def get_all_tasks_for_checklist():
     checklist = validate_model(Checklist, request.args.get("checklist_id"))
 
-    all_tasks = Task.query.all()
-
+    all_tasks = Task.query.filter(Task.checklist_id == checklist.id)
     return jsonify([task.to_dict() for task in all_tasks])
 
 @tasks_bp.route("/<id>", methods=["PATCH"])

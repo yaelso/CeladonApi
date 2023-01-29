@@ -55,8 +55,8 @@ def test_create_checklist_must_contain_title(client, one_category):
     assert response.status_code == 400
     assert response_body == {"details": "Invalid submission field; missing title or category ID"}
 
-def test_get_checklists_for_category_no_saved_checklists(client):
-    response = client.get("/categories")
+def test_get_checklists_for_category_no_saved_checklists(client, one_category):
+    response = client.get("/checklists?category_id=1")
     response_body = response.get_json()
 
     assert response.status_code == 200

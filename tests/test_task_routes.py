@@ -54,13 +54,51 @@ def test_create_task_must_contain_title(client, one_checklist_belongs_to_one_cat
     assert Task.query.all() == []
 
 def test_get_tasks_for_checklist_no_saved_tasks(client, one_checklist_belongs_to_one_category):
-    pass
+    response = client.get("/tasks?checklist_id=1")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == []
 
 def test_get_all_tasks_for_checklist(client, three_tasks_belong_to_one_checklist):
-    pass
+    response = client.get("/tasks?checklist_id=1")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 3
+    assert response_body == [
+        {
+            "id": 1,
+            "title": "Chapter 1",
+            "checklist_id": 1
+        },
+        {
+            "id": 2,
+            "title": "Chapter 2",
+            "checklist_id": 1
+        },
+        {
+            "id": 3,
+            "title": "Chapter 3",
+            "checklist_id": 1
+        }
+    ]
+
+def test_get_all_tasks_for_checklist_not_found(client):
+    response = client.get("/tasks?checklist_id=1")
+    response_body = response.get_json()
+
+    assert response.status_code == 404
+    assert response_body == {"details": "Checklist 1 ID not found"}
+    assert Task.query.all() == []
 
 def test_get_all_tasks_for_invalid_checklist(client):
-    pass
+    response = client.get("/tasks?checklist_id=x")
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert response_body == {"details": "Checklist x invalid ID"}
+    assert Task.query.all() == []
 
 def test_delete_task(client, three_tasks_belong_to_one_checklist):
     response = client.delete("/tasks/1")
