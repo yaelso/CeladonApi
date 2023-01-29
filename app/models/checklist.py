@@ -7,7 +7,7 @@ class Checklist(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     category = db.relationship("Category", back_populates="checklists")
     tasks = db.relationship("Task", back_populates="checklist", lazy=True)
-    # status_id = db.Column(db.Integer, db.ForeignKey("checklist_status.id"))
+    # is_archived = db.Column(db.Boolean)
 
     def to_dict(self, tasks=False):
         checklist = {
@@ -24,4 +24,4 @@ class Checklist(db.Model):
 
     @classmethod
     def from_dict(cls, data):
-        return cls(title=data["title"], description=data["description"], category_id=["category_id"])
+        return cls(title=data["title"], description=data["description"], category_id=data["category_id"])

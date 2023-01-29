@@ -24,7 +24,6 @@ def create_app(test_config=None):
 
     from app.models.category import Category
     from app.models.checklist import Checklist
-    from app.models.checklist_status import Checklist_Status
     from app.models.task import Task
     from app.models.pokemon import Pokemon
     from app.models.user import User
@@ -34,6 +33,12 @@ def create_app(test_config=None):
 
     from app.routes.category_routes import categories_bp
     app.register_blueprint(categories_bp)
+
+    from app.routes.checklist_routes import checklists_bp
+    app.register_blueprint(checklists_bp)
+
+    from app.routes.task_routes import tasks_bp
+    app.register_blueprint(tasks_bp)
 
     CORS(app)
     return app

@@ -3,6 +3,49 @@ from app.models.category import Category
 import pytest
 
 
+def test_create_category(client):
+    response = client.post("/categories", json={
+        "title": "Test category title",
+        "description": "Test category description"
+    })
+    response_body = response.get_json()
+
+    assert response.status_code == 201
+    assert "category" in response_body
+    assert response_body == {
+        "category" : {
+            "id": 1,
+            "title": "Test category title",
+            "description": "Test category description"
+        }
+    }
+
+def test_create_category_must_contain_title(client):
+    response = client.post("/categories", json={
+        "description": "Test category description"
+    })
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert "details" in response_body
+    assert response_body == {
+        "details": "Invalid submission field; missing title or description"
+    }
+    assert Category.query.all() == []
+
+def test_create_category_must_contain_description(client):
+    response = client.post("/categories", json={
+        "title": "Test category title"
+    })
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert "details" in response_body
+    assert response_body == {
+        "details": "Invalid submission field; missing title or description"
+    }
+    assert Category.query.all() == []
+
 def test_get_categories_no_saved_categories(client):
     response = client.get("/categories")
     response_body = response.get_json()
@@ -23,32 +66,6 @@ def test_get_all_categories(client, one_category):
             "description": "A category devoted to Python learning resources"
         }
     ]
-
-def test_post_category_must_contain_title(client):
-    response = client.post("/categories", json={
-        "description": "Test description"
-    })
-    response_body = response.get_json()
-
-    assert response.status_code == 400
-    assert "details" in response_body
-    assert response_body == {
-        "details": "Invalid submission field"
-    }
-    assert Category.query.all() == []
-
-def test_post_category_must_contain_description(client):
-    response = client.post("/categories", json={
-        "title": "Test title"
-    })
-    response_body = response.get_json()
-
-    assert response.status_code == 400
-    assert "details" in response_body
-    assert response_body == {
-        "details": "Invalid submission field"
-    }
-    assert Category.query.all() == []
 
 def test_delete_category(client, one_category):
     response = client.delete("/categories/1")

@@ -19,4 +19,4 @@ class Task(db.Model):
 
     @classmethod
     def from_dict(cls, data):
-        return cls(title=data["title"], checklist_id=["checklist_id"])
+        return cls(title=data["title"], checklist_id=data["checklist_id"])
