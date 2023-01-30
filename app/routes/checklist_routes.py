@@ -22,15 +22,32 @@ def create_checklist():
     return {"checklist": new_checklist.to_dict()}, 201
 
 @checklists_bp.route("", methods=["GET"])
-def get_all_checklists_for_category():
+def get_all_unarchived_checklists_for_category():
     category = validate_model(Category, request.args.get("category_id"))
 
-    all_checklists = Checklist.query.filter(Checklist.category_id == category.id)
+    all_checklists = Checklist.query.filter((Checklist.category_id == category.id) and (Checklist.is_archived == False))
     return jsonify([checklist.to_dict() for checklist in all_checklists])
 
-@checklists_bp.route("/<id>", methods=["PATCH"])
-def archive_checklist():
-    pass
+@checklists_bp.route("/archive", methods=["GET"])
+def get_all_archived_checklists():
+    all_checklists = Checklist.query.filter(Checklist.is_archived == True)
+    return jsonify([checklist.to_dict() for checklist in all_checklists])
+
+@checklists_bp.route("/<id>/archive", methods=["PATCH"])
+def archive_checklist(id):
+    checklist = validate_model(Checklist, id)
+
+    checklist.update_is_archived()
+    db.session.commit()
+    return {"checklist": checklist.to_dict()}
+
+@checklists_bp.route("/<id>/unarchive", methods=["PATCH"])
+def unarchive_checklist(id):
+    checklist = validate_model(Checklist, id)
+
+    checklist.update_is_archived(False)
+    db.session.commit()
+    return {"checklist": checklist.to_dict()}
 
 @checklists_bp.route("/<id>", methods=["DELETE"])
 def delete_checklist(id):

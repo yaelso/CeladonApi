@@ -37,6 +37,13 @@ def one_checklist_belongs_to_one_category(app, one_category):
     db.session.commit()
 
 @pytest.fixture
+def archived_checklist(app, one_checklist_belongs_to_one_category):
+    new_checklist = Checklist(title="Real Python - DevOps With Python", description="A Real Python learning path", category_id=1)
+    db.session.add(new_checklist)
+    new_checklist.is_archived = True
+    db.session.commit()
+
+@pytest.fixture
 def one_task_belong_to_one_checklist(app, one_checklist_belongs_to_one_category):
     db.session.add_all([
         Task(title="Chapter 1", checklist_id=1),

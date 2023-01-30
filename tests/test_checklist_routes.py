@@ -19,7 +19,8 @@ def test_create_checklist(client, one_category):
             "id": 1,
             "title": "Test list title",
             "description": "Test list description",
-            "category_id": 1
+            "category_id": 1,
+            "is_archived": False,
         }
     }
 
@@ -55,14 +56,14 @@ def test_create_checklist_must_contain_title(client, one_category):
     assert response.status_code == 400
     assert response_body == {"details": "Invalid submission field; missing title or category ID"}
 
-def test_get_checklists_for_category_no_saved_checklists(client, one_category):
+def test_get_unarchived_checklists_for_category_no_saved_checklists(client, one_category):
     response = client.get("/checklists?category_id=1")
     response_body = response.get_json()
 
     assert response.status_code == 200
     assert response_body == []
 
-def test_get_all_checklists_for_category(client, one_checklist_belongs_to_one_category):
+def test_get_all_unarchived_checklists_for_category(client, one_checklist_belongs_to_one_category):
     response = client.get("/checklists?category_id=1")
     response_body = response.get_json()
 
@@ -73,11 +74,28 @@ def test_get_all_checklists_for_category(client, one_checklist_belongs_to_one_ca
             "id": 1,
             "title": "Automate the Boring Stuff",
             "description": "A foundational Python text",
-            "category_id": 1
+            "category_id": 1,
+            "is_archived": False,
         }
     ]
 
-def test_get_all_checklists_for_category_not_found(client):
+def test_get_all_archived_checklists_for_category(client, archived_checklist):
+    response = client.get("/checklists/archive")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == [
+        {
+            "id": 2,
+            "title": "Real Python - DevOps With Python",
+            "description": "A Real Python learning path",
+            "category_id": 1,
+            "is_archived": True,
+        }
+    ]
+
+def test_get_all_unarchived_checklists_for_category_not_found(client):
     response = client.get("/checklists?category_id=1")
     response_body = response.get_json()
 
@@ -85,13 +103,45 @@ def test_get_all_checklists_for_category_not_found(client):
     assert response_body == {"details": "Category 1 ID not found"}
     assert Checklist.query.all() == []
 
-def test_get_all_checklists_for_invalid_category(client):
+def test_get_all_unarchived_checklists_for_invalid_category(client):
     response = client.get("/checklists?category_id=x")
     response_body = response.get_json()
 
     assert response.status_code == 400
     assert response_body == {"details": "Category x invalid ID"}
     assert Checklist.query.all() == []
+
+def test_archive_checklist(client, one_checklist_belongs_to_one_category):
+    response = client.patch("/checklists/1/archive")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == {
+        "checklist" : {
+            "id": 1,
+            "title": "Automate the Boring Stuff",
+            "description": "A foundational Python text",
+            "category_id": 1,
+            "is_archived": True,
+        }
+    }
+
+def test_unarchive_checklist(client, archived_checklist):
+    response = client.patch("/checklists/2/unarchive")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == {
+        "checklist" : {
+            "id": 2,
+            "title": "Real Python - DevOps With Python",
+            "description": "A Real Python learning path",
+            "category_id": 1,
+            "is_archived": False,
+        }
+    }
 
 def test_delete_checklist(client, one_checklist_belongs_to_one_category):
     response = client.delete("/checklists/1")

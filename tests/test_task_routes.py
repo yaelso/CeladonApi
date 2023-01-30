@@ -118,14 +118,16 @@ def test_mark_task_as_complete(client, one_task_belong_to_one_checklist):
 
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == { "task": {
-        "id": 1,
-        "title": "Chapter 1",
-        "checklist_id": 1,
-        "is_complete": True,
-        "in_progress": False,
-        "due_date": None,
-    }}
+    assert response_body == {
+        "task": {
+            "id": 1,
+            "title": "Chapter 1",
+            "checklist_id": 1,
+            "is_complete": True,
+            "in_progress": False,
+            "due_date": None,
+        }
+    }
 
 def test_mark_complete_task_as_incomplete(client, one_task_belong_to_one_checklist):
     response = client.patch("/tasks/1/mark_incomplete")
