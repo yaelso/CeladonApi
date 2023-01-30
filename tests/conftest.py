@@ -37,6 +37,13 @@ def one_checklist_belongs_to_one_category(app, one_category):
     db.session.commit()
 
 @pytest.fixture
+def one_task_belong_to_one_checklist(app, one_checklist_belongs_to_one_category):
+    db.session.add_all([
+        Task(title="Chapter 1", checklist_id=1),
+    ])
+    db.session.commit()
+
+@pytest.fixture
 def three_tasks_belong_to_one_checklist(app, one_checklist_belongs_to_one_category):
     db.session.add_all([
         Task(title="Chapter 1", checklist_id=1),

@@ -16,7 +16,10 @@ def test_create_task(client, one_checklist_belongs_to_one_category):
         "task" : {
             "id": 1,
             "title": "Test task title",
-            "checklist_id": 1
+            "checklist_id": 1,
+            "is_complete": False,
+            "in_progress": False,
+            "due_date": None,
         }
     }
 
@@ -70,17 +73,26 @@ def test_get_all_tasks_for_checklist(client, three_tasks_belong_to_one_checklist
         {
             "id": 1,
             "title": "Chapter 1",
-            "checklist_id": 1
+            "checklist_id": 1,
+            "is_complete": False,
+            "in_progress": False,
+            "due_date": None,
         },
         {
             "id": 2,
             "title": "Chapter 2",
-            "checklist_id": 1
+            "checklist_id": 1,
+            "is_complete": False,
+            "in_progress": False,
+            "due_date": None,
         },
         {
             "id": 3,
             "title": "Chapter 3",
-            "checklist_id": 1
+            "checklist_id": 1,
+            "is_complete": False,
+            "in_progress": False,
+            "due_date": None,
         }
     ]
 
@@ -100,7 +112,67 @@ def test_get_all_tasks_for_invalid_checklist(client):
     assert response_body == {"details": "Checklist x invalid ID"}
     assert Task.query.all() == []
 
-def test_delete_task(client, three_tasks_belong_to_one_checklist):
+def test_mark_task_as_complete(client, one_task_belong_to_one_checklist):
+    response = client.patch("/tasks/1/mark_complete")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == { "task": {
+        "id": 1,
+        "title": "Chapter 1",
+        "checklist_id": 1,
+        "is_complete": True,
+        "in_progress": False,
+        "due_date": None,
+    }}
+
+def test_mark_complete_task_as_incomplete(client, one_task_belong_to_one_checklist):
+    response = client.patch("/tasks/1/mark_incomplete")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == { "task": {
+        "id": 1,
+        "title": "Chapter 1",
+        "checklist_id": 1,
+        "is_complete": False,
+        "in_progress": False,
+        "due_date": None,
+    }}
+
+def test_mark_task_as_in_progress(client, one_task_belong_to_one_checklist):
+    response = client.patch("/tasks/1/mark_in_progress")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == { "task": {
+        "id": 1,
+        "title": "Chapter 1",
+        "checklist_id": 1,
+        "is_complete": False,
+        "in_progress": True,
+        "due_date": None,
+    }}
+
+def test_mark_task_as_not_in_progress(client, one_task_belong_to_one_checklist):
+    response = client.patch("/tasks/1/mark_not_in_progress")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == { "task": {
+        "id": 1,
+        "title": "Chapter 1",
+        "checklist_id": 1,
+        "is_complete": False,
+        "in_progress": False,
+        "due_date": None,
+    }}
+
+def test_delete_task(client, one_task_belong_to_one_checklist):
     response = client.delete("/tasks/1")
     response_body = response.get_json()
 

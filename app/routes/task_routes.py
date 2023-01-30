@@ -28,9 +28,37 @@ def get_all_tasks_for_checklist():
     all_tasks = Task.query.filter(Task.checklist_id == checklist.id)
     return jsonify([task.to_dict() for task in all_tasks])
 
-@tasks_bp.route("/<id>", methods=["PATCH"])
-def mark_task_as_completed():
-    pass
+@tasks_bp.route("/<id>/mark_complete", methods=["PATCH"])
+def mark_task_complete(id):
+    task = validate_model(Task, id)
+
+    task.update_completed_at()
+    db.session.commit()
+    return {"task": task.to_dict()}
+
+@tasks_bp.route("/<id>/mark_incomplete", methods=["PATCH"])
+def mark_task_incomplete(id):
+    task = validate_model(Task, id)
+
+    task.update_completed_at(False)
+    db.session.commit()
+    return {"task": task.to_dict()}
+
+@tasks_bp.route("/<id>/mark_in_progress", methods=["PATCH"])
+def mark_task_in_progress(id):
+    task = validate_model(Task, id)
+
+    task.update_in_progress()
+    db.session.commit()
+    return {"task": task.to_dict()}
+
+@tasks_bp.route("/<id>/mark_not_in_progress", methods=["PATCH"])
+def mark_task_not_in_progress(id):
+    task = validate_model(Task, id)
+
+    task.update_in_progress(False)
+    db.session.commit()
+    return {"task": task.to_dict()}
 
 @tasks_bp.route("/<id>", methods=["DELETE"])
 def delete_task(id):
