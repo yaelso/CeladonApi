@@ -32,6 +32,11 @@ def get_all_archived_checklists():
     all_checklists = Checklist.query.filter(Checklist.is_archived == True)
     return jsonify([checklist.to_dict() for checklist in all_checklists])
 
+@checklists_bp.route("/favorites", methods=["GET"])
+def get_all_favorite_checklists():
+    all_checklists = Checklist.query.filter(Checklist.is_favorited == True)
+    return jsonify([checklist.to_dict() for checklist in all_checklists])
+
 @checklists_bp.route("/<id>/archive", methods=["PATCH"])
 def archive_checklist(id):
     checklist = validate_model(Checklist, id)
@@ -45,6 +50,22 @@ def unarchive_checklist(id):
     checklist = validate_model(Checklist, id)
 
     checklist.update_is_archived(False)
+    db.session.commit()
+    return {"checklist": checklist.to_dict()}
+
+@checklists_bp.route("/<id>/favorite", methods=["PATCH"])
+def favorite_checklist(id):
+    checklist = validate_model(Checklist, id)
+
+    checklist.update_is_favorited()
+    db.session.commit()
+    return {"checklist": checklist.to_dict()}
+
+@checklists_bp.route("/<id>/unfavorite", methods=["PATCH"])
+def unfavorite_checklist(id):
+    checklist = validate_model(Checklist, id)
+
+    checklist.update_is_favorited(False)
     db.session.commit()
     return {"checklist": checklist.to_dict()}
 
