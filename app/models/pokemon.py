@@ -17,3 +17,9 @@ class Pokemon(db.Model):
     @classmethod
     def from_dict(cls, data):
         return cls(name=data["name"], img_href=data["img_href"])
+
+    def update_image(self, request_img_href):
+        if request_img_href:
+            self.img_href = request_img_href
+        else:
+            self.img_href = None
