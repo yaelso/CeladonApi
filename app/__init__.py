@@ -25,7 +25,9 @@ def create_app(test_config=None):
     from app.models.category import Category
     from app.models.checklist import Checklist
     from app.models.task import Task
+    from app.models.habit import Habit
     from app.models.pokemon import Pokemon
+    from app.models.user_pokemon import UserPokemon
     from app.models.user import User
 
     db.init_app(app)
@@ -39,6 +41,18 @@ def create_app(test_config=None):
 
     from app.routes.task_routes import tasks_bp
     app.register_blueprint(tasks_bp)
+
+    from app.routes.habit_routes import habits_bp
+    app.register_blueprint(habits_bp)
+
+    from app.routes.pokemon_routes import pokemon_bp
+    app.register_blueprint(pokemon_bp)
+
+    from app.routes.user_pokemon_routes import user_pokemon_bp
+    app.register_blueprint(user_pokemon_bp)
+
+    from app.routes.user_routes import user_bp
+    app.register_blueprint(user_bp)
 
     CORS(app)
     return app
