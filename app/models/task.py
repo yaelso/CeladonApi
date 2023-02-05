@@ -3,8 +3,8 @@ from datetime import datetime
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
-    checklist_id = db.Column(db.Integer, db.ForeignKey("checklist.id"))
+    title = db.Column(db.String, nullable=False)
+    checklist_id = db.Column(db.Integer, db.ForeignKey("checklist.id"), nullable=False)
     checklist = db.relationship("Checklist", back_populates="tasks")
     in_progress = db.Column(db.Boolean, default=False)
     completed_at = db.Column(db.DateTime, default=None)
@@ -39,3 +39,9 @@ class Task(db.Model):
             self.in_progress = True
         else:
             self.in_progress = False
+
+    def update_due_date(self, request_due_date):
+        if request_due_date:
+            self.due_date = request_due_date
+        else:
+            self.due_date = None

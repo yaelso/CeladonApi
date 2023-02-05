@@ -2,7 +2,7 @@ from app import db
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
     checklists = db.relationship("Checklist", back_populates="category", lazy=True)
@@ -10,7 +10,7 @@ class Category(db.Model):
     def to_dict(self, checklists=False):
         category = {
             "id": self.id,
-            # "user_id": self.user_id,
+            "user_id": self.user_id,
             "title": self.title,
             "description": self.description,
         }
@@ -22,4 +22,4 @@ class Category(db.Model):
 
     @classmethod
     def from_dict(cls, data):
-        return cls(title=data["title"], description=data["description"])
+        return cls(user_id=data["user_id"], title=data["title"], description=data["description"])
