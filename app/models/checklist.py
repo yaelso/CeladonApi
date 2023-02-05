@@ -32,11 +32,12 @@ class Checklist(db.Model):
     def update_is_archived(self, archival_status=True):
         if not archival_status == False:
             self.is_archived = True
+            self.is_favorited = False
         else:
             self.is_archived = False
 
     def update_is_favorited(self, favorite_status=True):
-        if not favorite_status == False:
+        if not favorite_status == False and not self.is_archived == True:
             self.is_favorited = True
         else:
             self.is_favorited = False
