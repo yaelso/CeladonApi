@@ -13,7 +13,6 @@ def create_checklist():
         return make_response({"details":"Invalid submission field; missing title or category ID"}, 400)
 
     category = validate_model(Category, request_body["category_id"])
-
     new_checklist = Checklist.from_dict(request_body)
 
     db.session.add(new_checklist)
