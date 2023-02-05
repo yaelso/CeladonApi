@@ -21,6 +21,7 @@ def test_create_checklist(client, one_category):
             "description": "Test list description",
             "category_id": 1,
             "is_archived": False,
+            "is_favorited": False,
         }
     }
 
@@ -76,6 +77,7 @@ def test_get_all_unarchived_checklists_for_category(client, one_checklist_belong
             "description": "A foundational Python text",
             "category_id": 1,
             "is_archived": False,
+            "is_favorited": False,
         }
     ]
 
@@ -92,6 +94,7 @@ def test_get_all_archived_checklists_for_category(client, archived_checklist):
             "description": "A Real Python learning path",
             "category_id": 1,
             "is_archived": True,
+            "is_favorited": False,
         }
     ]
 
@@ -111,6 +114,23 @@ def test_get_all_unarchived_checklists_for_invalid_category(client):
     assert response_body == {"details": "Category x invalid ID"}
     assert Checklist.query.all() == []
 
+def test_get_all_favorited_checklists_for_category(client, favorited_checklist):
+    response = client.get("/checklists/favorite")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == [
+        {
+            "id": 2,
+            "title": "Real Python - DevOps With Python",
+            "description": "A Real Python learning path",
+            "category_id": 1,
+            "is_archived": True,
+            "is_favorited": True,
+        }
+    ]
+
 def test_archive_checklist(client, one_checklist_belongs_to_one_category):
     response = client.patch("/checklists/1/archive")
     response_body = response.get_json()
@@ -124,6 +144,7 @@ def test_archive_checklist(client, one_checklist_belongs_to_one_category):
             "description": "A foundational Python text",
             "category_id": 1,
             "is_archived": True,
+            "is_favorited": False,
         }
     }
 
@@ -140,6 +161,41 @@ def test_unarchive_checklist(client, archived_checklist):
             "description": "A Real Python learning path",
             "category_id": 1,
             "is_archived": False,
+            "is_favorited": False,
+        }
+    }
+
+def test_favorite_checklist(client, one_checklist_belongs_to_one_category):
+    response = client.patch("/checklists/1/favorite")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == {
+        "checklist" : {
+            "id": 1,
+            "title": "Automate the Boring Stuff",
+            "description": "A foundational Python text",
+            "category_id": 1,
+            "is_archived": True,
+            "is_favorited": True,
+        }
+    }
+
+def test_unfavorite_checklist(client, favorited_checklist):
+    response = client.patch("/checklists/2/unfavorite")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == {
+        "checklist" : {
+            "id": 2,
+            "title": "Real Python - DevOps With Python",
+            "description": "A Real Python learning path",
+            "category_id": 1,
+            "is_archived": False,
+            "is_favorited": False,
         }
     }
 
