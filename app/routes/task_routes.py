@@ -60,6 +60,23 @@ def mark_task_not_in_progress(id):
     db.session.commit()
     return {"task": task.to_dict()}
 
+@tasks_bp.route("/<id>/due_date", methods=["PATCH"])
+def mark_task_due_date(id):
+    request_body = request.get_json()
+    task = validate_model(Task, id)
+
+    task.update_due_date(request_body["due_date"])
+    db.session.commit()
+    return {"task": task.to_dict()}
+
+@tasks_bp.route("/<id>/clear_due_date", methods=["PATCH"])
+def clear_task_due_date(id):
+    task = validate_model(Task, id)
+
+    task.update_due_date()
+    db.session.commit()
+    return {"task": task.to_dict()}
+
 @tasks_bp.route("/<id>", methods=["DELETE"])
 def delete_task(id):
     task = validate_model(Task, id)
