@@ -2,7 +2,7 @@ from app import db
 
 class Habit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     title = db.Column(db.String, nullable=False)
     reps = db.Column(db.Integer, default=0)
 

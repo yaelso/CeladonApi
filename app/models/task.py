@@ -4,7 +4,7 @@ from datetime import datetime
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
-    checklist_id = db.Column(db.Integer, db.ForeignKey("checklist.id"), nullable=False)
+    checklist_id = db.Column(db.Integer, db.ForeignKey("checklist.id"))
     checklist = db.relationship("Checklist", back_populates="tasks")
     in_progress = db.Column(db.Boolean, default=False)
     completed_at = db.Column(db.DateTime, default=None)

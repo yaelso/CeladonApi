@@ -2,8 +2,8 @@ from app import db
 
 class UserPokemon(db.Model):
     __tablename__ = "user_pokemon"
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True, nullabe=False)
-    pokemon_id = db.Column(db.Integer, db.ForeignKey("pokemon.id"), primary_key=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    pokemon_id = db.Column(db.Integer, db.ForeignKey("pokemon.id"), primary_key=True)
     exp = db.Column(db.Integer, default=0)
 
     def to_dict(self):

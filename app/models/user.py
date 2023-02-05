@@ -3,7 +3,7 @@ from app import db
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firebase_id = db.Column(db.String, nullable=False)
-    active_pokemon_id = db.Column(db.Integer, db.ForeignKey("user_pokemon.pokemon_id"), default=None)
+    active_pokemon_id = db.Column(db.Integer, db.ForeignKey("pokemon.id"), default=None)
 
     def to_dict(self):
         user = {

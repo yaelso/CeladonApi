@@ -51,8 +51,8 @@ def create_app(test_config=None):
     from app.routes.user_pokemon_routes import user_pokemon_bp
     app.register_blueprint(user_pokemon_bp)
 
-    from app.routes.user_routes import user_bp
-    app.register_blueprint(user_bp)
+    from app.routes.user_routes import users_bp
+    app.register_blueprint(users_bp)
 
     CORS(app)
     return app

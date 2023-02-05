@@ -4,7 +4,7 @@ class Checklist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
-    category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     category = db.relationship("Category", back_populates="checklists")
     tasks = db.relationship("Task", back_populates="checklist", lazy=True)
     is_archived = db.Column(db.Boolean, default=False)
