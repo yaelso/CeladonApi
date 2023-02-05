@@ -28,6 +28,13 @@ def get_all_tasks_for_checklist():
     all_tasks = Task.query.filter(Task.checklist_id == checklist.id)
     return jsonify([task.to_dict() for task in all_tasks])
 
+@tasks_bp.route("", methods=["GET"])
+def get_all_tasks_for_due_date():
+    due_date = request.args.get("due_date")
+
+    all_tasks = Task.query.filter(Task.due_date == due_date)
+    return jsonify([task.to_dict() for task in all_tasks])
+
 @tasks_bp.route("/<id>/mark_complete", methods=["PATCH"])
 def mark_task_complete(id):
     task = validate_model(Task, id)
