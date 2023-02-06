@@ -6,7 +6,7 @@ class Checklist(db.Model):
     description = db.Column(db.String)
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     category = db.relationship("Category", back_populates="checklists")
-    tasks = db.relationship("Task", back_populates="checklist", lazy=True)
+    tasks = db.relationship("Task", back_populates="checklist", lazy=True, cascade="delete, delete-orphan")
     is_archived = db.Column(db.Boolean, default=False)
     is_favorited = db.Column(db.Boolean, default=False)
 

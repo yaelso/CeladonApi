@@ -5,7 +5,7 @@ class Category(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
-    checklists = db.relationship("Checklist", back_populates="category", lazy=True)
+    checklists = db.relationship("Checklist", back_populates="category", lazy=True, cascade="delete, delete-orphan")
 
     def to_dict(self, checklists=False):
         category = {
