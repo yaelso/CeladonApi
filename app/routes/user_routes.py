@@ -30,8 +30,8 @@ def get_user(id):
 
     return {"user": user.to_dict()}
 
-@users_bp.route("/<id>/active_pokemon", methods=["PATCH"])
-def set_active_pokemon(id):
+@users_bp.route("/active_pokemon", methods=["PATCH"])
+def set_active_pokemon():
     user_from_token = get_user_profile_from_auth_token(request.headers["Authorization"])
     user_from_db = User.query.filter(User.id == user_from_token.id).one_or_none()
 
