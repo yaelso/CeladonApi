@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, jsonify, abort, make_response, request
 from app.models.category import Category
-from app.utils import validate_model
+from app.utils import get_user_profile_from_auth_token, validate_model
 from app import db
 
 categories_bp = Blueprint("categories", __name__, url_prefix="/categories")
@@ -11,7 +11,12 @@ def create_category():
     if not "title" in request_body or not "description" in request_body:
         return make_response({"details":"Invalid submission field; missing title or description"}, 400)
 
-    new_category = Category.from_dict(request_body)
+    user = get_user_profile_from_auth_token(request.headers["Authorization"])
+
+    category_request_obj = request_body.copy()
+    category_request_obj["user_id"] = user.id
+
+    new_category = Category.from_dict(category_request_obj)
 
     db.session.add(new_category)
     db.session.commit()
@@ -20,7 +25,8 @@ def create_category():
 
 @categories_bp.route("", methods=["GET"])
 def get_all_categories():
-    categories = Category.query.all()
+    user = get_user_profile_from_auth_token(request.headers["Authorization"])
+    categories = Category.query.filter(Category.user_id == user.id)
 
     return jsonify([category.to_dict() for category in categories])
 

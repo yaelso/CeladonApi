@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, jsonify, abort, make_response, request
 from app.models.habit import Habit
 from app.models.user import User
-from app.utils import validate_model
+from app.utils import get_user_profile_from_auth_token, validate_model
 from app import db
 
 habits_bp = Blueprint("habits", __name__, url_prefix="/habits")
@@ -12,8 +12,12 @@ def create_habit():
     if not "user_id" in request_body or not "title" in request_body:
         return make_response({"details":"Invalid submission field; missing user ID or title"}, 400)
 
-    user = validate_model(User, request_body["user_id"])
-    new_habit = Habit.from_dict(request_body)
+    user = get_user_profile_from_auth_token(request.headers["Authorization"])
+
+    habit_request_obj = request_body.copy()
+    habit_request_obj["user_id"] = user.id
+
+    new_habit = Habit.from_dict(habit_request_obj)
 
     db.session.add(new_habit)
     db.session.commit()
@@ -22,9 +26,10 @@ def create_habit():
 
 @habits_bp.route("", methods=["GET"])
 def get_all_habits():
-    user = validate_model(User, request.args.get("user_id"))
+    user = get_user_profile_from_auth_token(request.headers["Authorization"])
 
-    all_habits = Habit.query.filter((Habit.user_id == user.id))
+    all_habits = Habit.query.filter(Habit.user_id == user.id)
+
     return jsonify([habit.to_dict() for habit in all_habits])
 
 @habits_bp.route("/<id>/update_reps", methods=["PATCH"])

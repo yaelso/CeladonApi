@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, jsonify, abort, make_response, request
 from app.models.user import User
-from app.utils import validate_model
+from app.utils import get_user_profile_from_auth_token, validate_model
 from app import db
 
 users_bp = Blueprint("user", __name__, url_prefix="/user")
@@ -32,7 +32,19 @@ def get_user(id):
 
 @users_bp.route("/<id>/active_pokemon", methods=["PATCH"])
 def set_active_pokemon(id):
-    pass
+    user_from_token = get_user_profile_from_auth_token(request.headers["Authorization"])
+    user_from_db = User.query.filter(User.id == user_from_token.id).one_or_none()
+
+    if not user_from_db:
+        abort(make_response({"details":f"User not found"}, 404))
+
+    request_body = request.get_json()
+
+    user_from_db.update_active_pokemon(request_body["active_pokemon_id"])
+
+    db.session.commit()
+
+    return {"user": user_from_db.to_dict}
 
 @users_bp.route("/<id>", methods=["DELETE"])
 def delete_user(id):
