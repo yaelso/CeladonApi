@@ -56,8 +56,8 @@ def active_pokemon(app, two_pokemon_belong_to_one_user):
     pass
 
 @pytest.fixture
-def one_category(app):
-    new_category = Category(title="Python Learning", description="A category devoted to Python learning resources")
+def one_category(app, one_user):
+    new_category = Category(user_id=1, title="Python Learning", description="A category devoted to Python learning resources")
     db.session.add(new_category)
     db.session.commit()
 
@@ -96,5 +96,5 @@ def three_tasks_belong_to_one_checklist(app, one_checklist_belongs_to_one_catego
     db.session.commit()
 
 @pytest.fixture
-def three_habits_belong_to_one_user(app):
+def three_habits_belong_to_one_user(app, one_user):
     pass

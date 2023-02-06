@@ -115,7 +115,7 @@ def test_get_all_unarchived_checklists_for_invalid_category(client):
     assert Checklist.query.all() == []
 
 def test_get_all_favorited_checklists_for_category(client, favorited_checklist):
-    response = client.get("/checklists/favorite")
+    response = client.get("/checklists/favorites")
     response_body = response.get_json()
 
     assert response.status_code == 200
@@ -126,7 +126,7 @@ def test_get_all_favorited_checklists_for_category(client, favorited_checklist):
             "title": "Real Python - DevOps With Python",
             "description": "A Real Python learning path",
             "category_id": 1,
-            "is_archived": True,
+            "is_archived": False,
             "is_favorited": True,
         }
     ]
@@ -177,7 +177,7 @@ def test_favorite_checklist(client, one_checklist_belongs_to_one_category):
             "title": "Automate the Boring Stuff",
             "description": "A foundational Python text",
             "category_id": 1,
-            "is_archived": True,
+            "is_archived": False,
             "is_favorited": True,
         }
     }

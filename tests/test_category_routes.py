@@ -3,8 +3,9 @@ from app.models.category import Category
 import pytest
 
 
-def test_create_category(client):
+def test_create_category(client, one_user):
     response = client.post("/categories", json={
+        "user_id": 1,
         "title": "Test category title",
         "description": "Test category description"
     })
@@ -15,13 +16,15 @@ def test_create_category(client):
     assert response_body == {
         "category" : {
             "id": 1,
+            "user_id": 1,
             "title": "Test category title",
             "description": "Test category description"
         }
     }
 
-def test_create_category_must_contain_title(client):
+def test_create_category_must_contain_title(client, one_user):
     response = client.post("/categories", json={
+        "user_id": 1,
         "description": "Test category description"
     })
     response_body = response.get_json()
@@ -33,8 +36,9 @@ def test_create_category_must_contain_title(client):
     }
     assert Category.query.all() == []
 
-def test_create_category_must_contain_description(client):
+def test_create_category_must_contain_description(client, one_user):
     response = client.post("/categories", json={
+        "user_id": 1,
         "title": "Test category title"
     })
     response_body = response.get_json()
@@ -53,7 +57,7 @@ def test_get_categories_no_saved_categories(client):
     assert response.status_code == 200
     assert response_body == []
 
-def test_get_all_categories(client, one_category):
+def test_get_all_categories(client, one_user, one_category):
     response = client.get("/categories")
     response_body = response.get_json()
 
@@ -62,6 +66,7 @@ def test_get_all_categories(client, one_category):
     assert response_body == [
         {
             "id": 1,
+            "user_id": 1,
             "title": "Python Learning",
             "description": "A category devoted to Python learning resources"
         }
