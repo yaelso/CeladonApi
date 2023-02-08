@@ -16,7 +16,7 @@ class User(db.Model):
 
     @classmethod
     def from_dict(cls, data):
-        return cls(firebase_id=data["firebase_id"])
+        return cls(firebase_id=data)
 
     def update_active_pokemon(self, request_pokemon_id):
         self.active_pokemon_id = request_pokemon_id

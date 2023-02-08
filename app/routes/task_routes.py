@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, jsonify, abort, make_response, request
 from app.models.task import Task
 from app.models.checklist import Checklist
-from app.utils import get_firebase_user_id, get_user_profile_from_auth_token, validate_model
+from app.utils import validate_model
 from app import db, firebase
 
 tasks_bp = Blueprint("tasks", __name__, url_prefix="/tasks")
@@ -10,12 +10,16 @@ tasks_bp = Blueprint("tasks", __name__, url_prefix="/tasks")
 @firebase.jwt_required
 def create_task():
     request_body = request.get_json()
-    if not "title" in request_body:
-        return make_response({"details":"Invalid submission field; missing title"}, 400)
+    query_param = request.args.get('checklist_id')
+    if not "title" in request_body or not query_param:
+        return make_response({"details":"Invalid submission field; missing title or checklist ID"}, 400)
 
-    checklist = validate_model(Checklist, request_body["checklist_id"])
+    checklist = validate_model(Checklist, query_param)
 
-    new_task = Task.from_dict(request_body)
+    task_request_obj = request_body.copy()
+    task_request_obj["checklist_id"] = checklist.id
+
+    new_task = Task.from_dict(task_request_obj)
 
     db.session.add(new_task)
     db.session.commit()

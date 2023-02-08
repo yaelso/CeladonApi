@@ -13,7 +13,11 @@ def create_category():
     if not "title" in request_body or not "description" in request_body:
         return make_response({"details":"Invalid submission field; missing title or description"}, 400)
 
-    user = get_user_profile_from_auth_token(request.headers["Authorization"])
+    firebase_user_id = get_firebase_user_id(
+        get_user_profile_from_auth_token(request.headers["Authorization"])
+    )
+
+    user = User.query.filter(User.firebase_id == firebase_user_id).one_or_none()
 
     category_request_obj = request_body.copy()
     category_request_obj["user_id"] = user.id
@@ -44,4 +48,4 @@ def delete_category(id):
     db.session.delete(category)
     db.session.commit()
 
-    return {"details": f'Category #{category.id} "{category.title}" successfully deleted'}
+    return {"details": f'Category #{category.id} {category.title} successfully deleted'}

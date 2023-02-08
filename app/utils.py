@@ -1,7 +1,4 @@
-from flask import abort, make_response, jsonify
-from app.models.user import User
-from app import db
-from collections import namedtuple
+from flask import abort, make_response
 import json
 import base64
 

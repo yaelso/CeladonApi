@@ -1,7 +1,7 @@
-from flask import Flask, Blueprint, jsonify, abort, make_response, request
+from flask import Flask, Blueprint, jsonify, make_response, request
 from app.models.checklist import Checklist
 from app.models.category import Category
-from app.utils import get_firebase_user_id, get_user_profile_from_auth_token, validate_model
+from app.utils import validate_model
 from app import db, firebase
 
 checklists_bp = Blueprint("checklists", __name__, url_prefix="/checklists")
@@ -10,11 +10,16 @@ checklists_bp = Blueprint("checklists", __name__, url_prefix="/checklists")
 @firebase.jwt_required
 def create_checklist():
     request_body = request.get_json()
-    if not "title" in request_body or not "category_id" in request_body:
+    query_param = request.args.get('category_id')
+    if not "title" in request_body or not query_param:
         return make_response({"details":"Invalid submission field; missing title or category ID"}, 400)
 
-    category = validate_model(Category, request_body["category_id"])
-    new_checklist = Checklist.from_dict(request_body)
+    category = validate_model(Category, query_param)
+
+    checklist_request_obj = request_body.copy()
+    checklist_request_obj["category_id"] = category.id
+
+    new_checklist = Checklist.from_dict(checklist_request_obj)
 
     db.session.add(new_checklist)
     db.session.commit()
@@ -85,4 +90,4 @@ def delete_checklist(id):
     db.session.delete(checklist)
     db.session.commit()
 
-    return {"details": f'Checklist #{checklist.id} "{checklist.title}" successfully deleted'}
+    return {"details": f'Checklist #{checklist.id} {checklist.title} successfully deleted'}
