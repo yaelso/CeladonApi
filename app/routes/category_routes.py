@@ -1,5 +1,4 @@
 from flask import Flask, Blueprint, jsonify, abort, make_response, request
-from flask_firebase_admin import FirebaseAdmin
 from app.models.category import Category
 from app.models.user import User
 from app.utils import get_firebase_user_id, get_user_profile_from_auth_token, validate_model

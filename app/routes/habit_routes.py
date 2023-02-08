@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, jsonify, abort, make_response, request
 from app.models.habit import Habit
 from app.models.user import User
-from app.utils import get_user_profile_from_auth_token, validate_model
+from app.utils import get_firebase_user_id, get_user_profile_from_auth_token, validate_model
 from app import db
 
 habits_bp = Blueprint("habits", __name__, url_prefix="/habits")
