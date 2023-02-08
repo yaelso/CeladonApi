@@ -1,7 +1,7 @@
-from flask import Flask, Blueprint, jsonify, abort, make_response, request
+from flask import Blueprint, jsonify, make_response, request
 from app.models.habit import Habit
 from app.models.user import User
-from app.utils import get_user_profile_from_auth_token, validate_model
+from app.utils import get_firebase_user_id, get_user_profile_from_auth_token, validate_model
 from app import db
 
 habits_bp = Blueprint("habits", __name__, url_prefix="/habits")
@@ -9,10 +9,14 @@ habits_bp = Blueprint("habits", __name__, url_prefix="/habits")
 @habits_bp.route("", methods=["POST"])
 def create_habit():
     request_body = request.get_json()
-    if not "user_id" in request_body or not "title" in request_body:
-        return make_response({"details":"Invalid submission field; missing user ID or title"}, 400)
+    if not "title" in request_body:
+        return make_response({"details":"Invalid submission field; missing title"}, 400)
 
-    user = get_user_profile_from_auth_token(request.headers["Authorization"])
+    firebase_user_id = get_firebase_user_id(
+        get_user_profile_from_auth_token(request.headers["Authorization"])
+    )
+
+    user = User.query.filter(User.firebase_id == firebase_user_id).one_or_none()
 
     habit_request_obj = request_body.copy()
     habit_request_obj["user_id"] = user.id
@@ -26,7 +30,11 @@ def create_habit():
 
 @habits_bp.route("", methods=["GET"])
 def get_all_habits():
-    user = get_user_profile_from_auth_token(request.headers["Authorization"])
+    firebase_user_id = get_firebase_user_id(
+        get_user_profile_from_auth_token(request.headers["Authorization"])
+    )
+
+    user = User.query.filter(User.firebase_id == firebase_user_id).one_or_none()
 
     all_habits = Habit.query.filter(Habit.user_id == user.id)
 
@@ -56,4 +64,4 @@ def delete_habit(id):
     db.session.delete(habit)
     db.session.commit()
 
-    return {"details": f'Habit #{habit.id} "{habit.title}" successfully deleted'}
+    return {"details": f'Habit #{habit.id} {habit.title} successfully deleted'}

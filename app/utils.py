@@ -1,6 +1,8 @@
-from flask import abort, make_response, jsonify
-from app.models.user import User
-from app import db
+from flask import abort, make_response
+import json
+import base64
+
+FIREBASE_USER_ID_ATTR_NAME = 'user_id'
 
 def validate_model(cls, model_id):
     '''Validates model instances based on a provided model and model_id'''
@@ -17,11 +19,13 @@ def validate_model(cls, model_id):
 
     return model
 
-def get_user_profile_from_auth_token(token):
-    '''Parses the provided JWT and returns the embedded user profile
-    Currently stubbed - returns a fake profile'''
+def get_user_profile_from_auth_token(auth_str):
+    '''Parses the provided JWT and returns the embedded user profile'''
 
-    return User.from_dict({
-        "id": 1,
-        "firebase_id": "Fake Test Id"
-    })
+    _, token = auth_str.split()
+    _, profile_base64, _ = token.split('.')
+    profile_json = base64.b64decode(profile_base64 + '==')
+    return json.loads(profile_json)
+
+def get_firebase_user_id(profile):
+    return profile[FIREBASE_USER_ID_ATTR_NAME]

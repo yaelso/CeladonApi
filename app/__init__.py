@@ -3,15 +3,35 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_cors import CORS
+from flask_firebase_admin import FirebaseAdmin
+from firebase_admin import credentials
 import os
 
 db = SQLAlchemy()
 migrate = Migrate()
+firebase = FirebaseAdmin()
+
 load_dotenv()
 
 
 def create_app(test_config=None):
     app = Flask(__name__)
+
+    cert = {
+        "type": os.environ.get("CELADON_FIREBASE_TYPE"),
+        "project_id": os.environ.get("CELADON_FIREBASE_PROJECT_ID"),
+        "private_key_id": os.environ.get("CELADON_FIREBASE_PRIVATE_KEY_ID"),
+        "private_key": os.environ.get("CELADON_FIREBASE_PRIVATE_KEY"),
+        "client_email": os.environ.get("CELADON_FIREBASE_CLIENT_EMAIL"),
+        "client_id": os.environ.get("CELADON_FIREBASE_CLIENT_ID"),
+        "auth_uri": os.environ.get("CELADON_FIREBASE_AUTH_URI"),
+        "token_uri": os.environ.get("CELADON_FIREBASE_TOKEN_URI"),
+        "auth_provider_x509_cert_url": os.environ.get("CELADON_FIREBASE_AUTH_PROVIDER_X509_CERT_URL"),
+        "client_x509_cert_url": os.environ.get("CELADON_FIREBASE_AUTH_CLIENT_X509_CERT_URL")
+    }
+
+    app.config["FIREBASE_ADMIN_CREDENTIAL"] = credentials.Certificate(cert)
+    firebase.init_app(app)
 
     if not test_config:
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
