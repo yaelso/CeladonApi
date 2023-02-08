@@ -1,8 +1,7 @@
-from flask import Flask, Blueprint, jsonify, abort, make_response, request
-from app.models.pokemon import Pokemon
+from flask import Blueprint, jsonify, make_response, request
 from app.models.user_pokemon import UserPokemon
 from app.models.user import User
-from app.utils import get_firebase_user_id, get_user_profile_from_auth_token, validate_model
+from app.utils import get_firebase_user_id, get_user_profile_from_auth_token
 from app import db, firebase
 
 user_pokemon_bp = Blueprint("user_pokemon", __name__, url_prefix="/user_pokemon")

@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request
 from app.models.checklist import Checklist
 from app.models.category import Category
 from app.utils import validate_model

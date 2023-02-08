@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, jsonify, abort, make_response, request
+from flask import Blueprint, jsonify, abort, make_response, request
 from app.models.user import User
 from app.utils import get_firebase_user_id, get_user_profile_from_auth_token, validate_model
 from app import db, firebase
@@ -50,12 +50,11 @@ def set_active_pokemon():
         abort(make_response({"details":f"User not found"}, 404))
 
     request_body = request.get_json()
-
     user.update_active_pokemon(request_body["active_pokemon_id"])
 
     db.session.commit()
 
-    return {"user": user.to_dict}
+    return {"user": user.to_dict()}
 
 @users_bp.route("/<id>", methods=["DELETE"])
 @firebase.jwt_required
