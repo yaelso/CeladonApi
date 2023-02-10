@@ -5,13 +5,17 @@ class UserPokemon(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     pokemon_id = db.Column(db.Integer, db.ForeignKey("pokemon.id"), primary_key=True)
     exp = db.Column(db.Integer, default=0)
+    pokemon = db.relationship("Pokemon")
 
-    def to_dict(self):
+    def to_dict(self, pokemon=False):
         user = {
             "user_id": self.user_id,
             "pokemon_id": self.pokemon_id,
             "exp": self.exp
         }
+
+        if pokemon:
+            user["pokemon"] = pokemon.to_dict()
 
         return user
 

@@ -42,7 +42,7 @@ def get_all_user_pokemon():
 
     user_pokemon = UserPokemon.query.filter(UserPokemon.user_id == user.id)
 
-    return jsonify([pokemon.to_dict() for pokemon in user_pokemon])
+    return jsonify([pokemon.to_dict(pokemon.pokemon) for pokemon in user_pokemon])
 
 @user_pokemon_bp.route("/<id>/exp", methods=["PATCH"])
 @firebase.jwt_required

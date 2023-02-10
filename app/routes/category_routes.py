@@ -38,7 +38,7 @@ def get_all_categories():
 
     categories = Category.query.join(User, User.firebase_id == firebase_user_id)
 
-    return jsonify([category.to_dict() for category in categories])
+    return jsonify([category.to_dict(category.checklists) for category in categories])
 
 @categories_bp.route("/<id>", methods=["DELETE"])
 @firebase.jwt_required

@@ -16,7 +16,7 @@ class Category(db.Model):
         }
 
         if checklists:
-            category["checklists"] = [checklist.to_dict() for checklist in self.checklists]
+            category["checklists"] = [checklist.to_dict(checklists.tasks) for checklist in self.checklists]
 
         return category
 
