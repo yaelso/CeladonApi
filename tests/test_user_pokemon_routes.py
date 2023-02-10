@@ -4,10 +4,6 @@ import pytest
 
 
 @pytest.mark.skip(reason="No way to test this feature yet")
-def test_get_all_user_pokemon(client):
-    pass
-
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_user_pokemon(client):
     pass
 
@@ -17,6 +13,10 @@ def test_create_user_pokemon_must_contain_user_id(client):
 
 @pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_user_pokemon_must_contain_pokemon_id(client):
+    pass
+
+@pytest.mark.skip(reason="No way to test this feature yet")
+def test_get_all_user_pokemon(client):
     pass
 
 @pytest.mark.skip(reason="No way to test this feature yet")

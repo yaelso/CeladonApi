@@ -4,19 +4,19 @@ import pytest
 
 
 @pytest.mark.skip(reason="No way to test this feature yet")
-def test_get_all_users(client, three_users):
-    pass
-
-@pytest.mark.skip(reason="No way to test this feature yet")
-def test_get_user(client, one_user):
-    pass
-
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_user(client):
     pass
 
 @pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_user_must_contain_firebase_id(client):
+    pass
+
+@pytest.mark.skip(reason="No way to test this feature yet")
+def test_get_all_users(client, three_users):
+    pass
+
+@pytest.mark.skip(reason="No way to test this feature yet")
+def test_get_user(client, one_user):
     pass
 
 @pytest.mark.skip(reason="No way to test this feature yet")

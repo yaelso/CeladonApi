@@ -4,12 +4,22 @@ import pytest
 
 
 @pytest.mark.skip(reason="No way to test this feature yet")
-def test_get_all_pokemon(client):
-    pass
-
-@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_pokemon(client):
-    pass
+    response = client.post("/pokemon", json={
+        "name": "",
+        "img_href": "Test category title",
+    })
+    response_body = response.get_json()
+
+    assert response.status_code == 201
+    assert "pokemon" in response_body
+    assert response_body == {
+        "pokemon" : {
+            "id": 1,
+            "name": "",
+            "img_href": "",
+        }
+    }
 
 @pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_pokemon_must_contain_name(client):
@@ -17,6 +27,10 @@ def test_create_pokemon_must_contain_name(client):
 
 @pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_pokemon_must_contain_img_href(client):
+    pass
+
+@pytest.mark.skip(reason="No way to test this feature yet")
+def test_get_all_pokemon(client):
     pass
 
 @pytest.mark.skip(reason="No way to test this feature yet")
