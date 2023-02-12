@@ -12,7 +12,7 @@ def create_user():
         get_user_profile_from_auth_token(request.headers["Authorization"])
     )
 
-    exists = User.query.filter(User.firebase_id == firebase_user_id).one_or_none()
+    exists = User.query.filter(User.firebase_id == firebase_user_id).first()
 
     if exists != None:
         return make_response({"details":"User already exists"}, 400)
