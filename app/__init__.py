@@ -18,20 +18,21 @@ load_dotenv()
 def create_app(test_config=None):
     app = Flask(__name__)
 
-    # cert = {
-    #     "type": os.environ.get("CELADON_FIREBASE_TYPE"),
-    #     "project_id": os.environ.get("CELADON_FIREBASE_PROJECT_ID"),
-    #     "private_key_id": os.environ.get("CELADON_FIREBASE_PRIVATE_KEY_ID"),
-    #     "private_key": os.environ.get("CELADON_FIREBASE_PRIVATE_KEY"),
-    #     "client_email": os.environ.get("CELADON_FIREBASE_CLIENT_EMAIL"),
-    #     "client_id": os.environ.get("CELADON_FIREBASE_CLIENT_ID"),
-    #     "auth_uri": os.environ.get("CELADON_FIREBASE_AUTH_URI"),
-    #     "token_uri": os.environ.get("CELADON_FIREBASE_TOKEN_URI"),
-    #     "auth_provider_x509_cert_url": os.environ.get("CELADON_FIREBASE_AUTH_PROVIDER_X509_CERT_URL"),
-    #     "client_x509_cert_url": os.environ.get("CELADON_FIREBASE_AUTH_CLIENT_X509_CERT_URL")
-    # }
-
-    cert = json.loads(os.environ.get("SERVICE_ACCOUNT"))
+    if (os.environ.get("SERVICE_ACCOUNT")):
+        cert = json.loads(os.environ.get("SERVICE_ACCOUNT"))
+    else:
+        cert = {
+            "type": os.environ.get("CELADON_FIREBASE_TYPE"),
+            "project_id": os.environ.get("CELADON_FIREBASE_PROJECT_ID"),
+            "private_key_id": os.environ.get("CELADON_FIREBASE_PRIVATE_KEY_ID"),
+            "private_key": os.environ.get("CELADON_FIREBASE_PRIVATE_KEY"),
+            "client_email": os.environ.get("CELADON_FIREBASE_CLIENT_EMAIL"),
+            "client_id": os.environ.get("CELADON_FIREBASE_CLIENT_ID"),
+            "auth_uri": os.environ.get("CELADON_FIREBASE_AUTH_URI"),
+            "token_uri": os.environ.get("CELADON_FIREBASE_TOKEN_URI"),
+            "auth_provider_x509_cert_url": os.environ.get("CELADON_FIREBASE_AUTH_PROVIDER_X509_CERT_URL"),
+            "client_x509_cert_url": os.environ.get("CELADON_FIREBASE_AUTH_CLIENT_X509_CERT_URL")
+        }
 
     app.config["FIREBASE_ADMIN_CREDENTIAL"] = credentials.Certificate(cert)
     firebase.init_app(app)
