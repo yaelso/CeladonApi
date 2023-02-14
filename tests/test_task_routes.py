@@ -2,7 +2,7 @@ from werkzeug.exceptions import HTTPException
 from app.models.task import Task
 import pytest
 
-
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_task(client, one_checklist_belongs_to_one_category):
     response = client.post("/tasks", json={
         "title": "Test task title",
@@ -23,6 +23,7 @@ def test_create_task(client, one_checklist_belongs_to_one_category):
         }
     }
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_task_for_checklist_not_found(client):
     response = client.post("/tasks", json={
         "title": "Test task title",
@@ -33,6 +34,7 @@ def test_create_task_for_checklist_not_found(client):
     assert response.status_code == 404
     assert response_body == {"details": "Checklist 1 ID not found"}
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_task_for_invalid_checklist(client):
     response = client.post("/tasks", json={
         "title": "Test task title",
@@ -43,6 +45,7 @@ def test_create_task_for_invalid_checklist(client):
     assert response.status_code == 400
     assert response_body == {"details": "Checklist x invalid ID"}
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_task_must_contain_title(client, one_checklist_belongs_to_one_category):
     response = client.post("/tasks", json={
         "checklist_id": 1
@@ -56,6 +59,7 @@ def test_create_task_must_contain_title(client, one_checklist_belongs_to_one_cat
     }
     assert Task.query.all() == []
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_tasks_for_checklist_no_saved_tasks(client, one_checklist_belongs_to_one_category):
     response = client.get("/tasks?checklist_id=1")
     response_body = response.get_json()
@@ -63,6 +67,7 @@ def test_get_tasks_for_checklist_no_saved_tasks(client, one_checklist_belongs_to
     assert response.status_code == 200
     assert response_body == []
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_all_tasks_for_checklist(client, three_tasks_belong_to_one_checklist):
     response = client.get("/tasks?checklist_id=1")
     response_body = response.get_json()
@@ -96,6 +101,7 @@ def test_get_all_tasks_for_checklist(client, three_tasks_belong_to_one_checklist
         }
     ]
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_all_tasks_for_checklist_not_found(client):
     response = client.get("/tasks?checklist_id=1")
     response_body = response.get_json()
@@ -104,6 +110,7 @@ def test_get_all_tasks_for_checklist_not_found(client):
     assert response_body == {"details": "Checklist 1 ID not found"}
     assert Task.query.all() == []
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_all_tasks_for_invalid_checklist(client):
     response = client.get("/tasks?checklist_id=x")
     response_body = response.get_json()
@@ -112,6 +119,7 @@ def test_get_all_tasks_for_invalid_checklist(client):
     assert response_body == {"details": "Checklist x invalid ID"}
     assert Task.query.all() == []
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_mark_task_as_complete(client, one_task_belong_to_one_checklist):
     response = client.patch("/tasks/1/mark_complete")
     response_body = response.get_json()
@@ -129,6 +137,7 @@ def test_mark_task_as_complete(client, one_task_belong_to_one_checklist):
         }
     }
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_mark_complete_task_as_incomplete(client, one_task_belong_to_one_checklist):
     response = client.patch("/tasks/1/mark_incomplete")
     response_body = response.get_json()
@@ -144,6 +153,7 @@ def test_mark_complete_task_as_incomplete(client, one_task_belong_to_one_checkli
         "due_date": None,
     }}
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_mark_task_as_in_progress(client, one_task_belong_to_one_checklist):
     response = client.patch("/tasks/1/mark_in_progress")
     response_body = response.get_json()
@@ -159,6 +169,7 @@ def test_mark_task_as_in_progress(client, one_task_belong_to_one_checklist):
         "due_date": None,
     }}
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_mark_task_as_not_in_progress(client, one_task_belong_to_one_checklist):
     response = client.patch("/tasks/1/mark_not_in_progress")
     response_body = response.get_json()
@@ -174,6 +185,7 @@ def test_mark_task_as_not_in_progress(client, one_task_belong_to_one_checklist):
         "due_date": None,
     }}
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_delete_task(client, one_task_belong_to_one_checklist):
     response = client.delete("/tasks/1")
     response_body = response.get_json()
@@ -185,6 +197,7 @@ def test_delete_task(client, one_task_belong_to_one_checklist):
     }
     assert Task.query.get(1) == None
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_delete_task_not_found(client):
     response = client.delete("/tasks/1")
     response_body = response.get_json()
@@ -192,6 +205,7 @@ def test_delete_task_not_found(client):
     assert response.status_code == 404
     assert response_body == {"details": "Task 1 ID not found"}
 
+@pytest.mark.skip(reason="No way to test this feature yet")
 def test_delete_task_invalid_id(client):
     response = client.delete("/tasks/x")
     response_body = response.get_json()

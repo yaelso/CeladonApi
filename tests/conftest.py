@@ -24,20 +24,25 @@ def app():
         db.drop_all()
 
 
+# These test fixtures are currently not working due to needing a JWT!
+# The testing suite at large will fail per requirement of said JWT
+
+# Going forward, I'll be investigating how to mock this in order to complete my tests!
+
 @pytest.fixture
 def client(app):
     return app.test_client()
 
 @pytest.fixture
 def one_user(app):
-    new_user = User(firebase_id="")
+    new_user = User(firebase_id="87qadfQ!lls")
     db.session.add(new_user)
     db.session.commit()
 
 @pytest.fixture
 def three_users(app):
     db.session.add_all([
-        User(firebase_id=""),
+        User(firebase_id="87qadfQ!lls"),
         User(firebase_id=""),
         User(firebase_id=""),
     ])
