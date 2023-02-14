@@ -38,6 +38,20 @@ def get_user(id):
 
     return {"user": user.to_dict()}
 
+@users_bp.route("/current", methods=["GET"])
+@firebase.jwt_required
+def get_current_user():
+    firebase_user_id = get_firebase_user_id(
+        get_user_profile_from_auth_token(request.headers["Authorization"])
+    )
+
+    user = User.query.filter(User.firebase_id == firebase_user_id).first()
+
+    if user is None:
+        return make_response({"details":"User does not exist"}, 404)
+
+    return {"user": user.to_dict()}
+
 @users_bp.route("/active_pokemon", methods=["PATCH"])
 @firebase.jwt_required
 def set_active_pokemon():
