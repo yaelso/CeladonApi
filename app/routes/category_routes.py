@@ -36,7 +36,7 @@ def get_all_categories():
         get_user_profile_from_auth_token(request.headers["Authorization"])
     )
 
-    categories = Category.query.join(User, User.firebase_id == firebase_user_id)
+    categories = Category.query.join(User).filter(User.firebase_id == firebase_user_id)
 
     return jsonify([category.to_dict(category.checklists) for category in categories])
 
