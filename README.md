@@ -34,19 +34,19 @@ This project does not have any current distribution packages! Below are steps de
 
 1. Clone repository
 2. Create a virtual env
-```
+```zsh
 $ python3 -m venv venv
 $ source venv/bin/activate
 (venv) $ # You're in activated virtual environment!
 ```
 3. Install dependencies
-```
+```zsh
 (venv) $ pip install -r requirements.txt
 ```
 4. Create database and corresponding env vars to link project to Postgresql DB, resembling the following:
-```
+`
 SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://postgres:postgres@localhost:5432/celadon_api_development
-```
+`
 5. Run `$ flask db init` and apply migrations
 6. Plug in personal Firebase auth configuration values
 7. Run server via `flask run`
